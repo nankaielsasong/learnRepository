@@ -1,3 +1,5 @@
 my git test file is here
 make a modify now
 actually this is the third modify
+i made the fourth modify
+git tracks changes of files
