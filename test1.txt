@@ -1,0 +1,4 @@
+this is a test file
+i want to test the command touch
+it seems everything is fine
+nice
