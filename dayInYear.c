@@ -34,19 +34,6 @@ int main() {
 	klee_make_symbolic(&m2, sizeof(m2), "later_month");
 	klee_make_symbolic(&d1, sizeof(d1), "early_day");
 	klee_make_symbolic(&d2, sizeof(d2), "later_day");
-	// y1-m1-d1 is the earlier date
-	// klee_assume(y1 < 3000);
-	// klee_assume(y1 > 0);
-	// klee_assume(y2 < 3000);
-	// klee_assume(y2 > 0);
-	// klee_assume(m1 > 0);
-	// klee_assume(m2 > 0);
-	// klee_assume(d1 > 0);
-	// klee_assume(d2 > 0);
-	// m1 = (m1 % 12 ) + 1;
-	// m2 = (m2 % 12 ) + 1;
-	// d1 = (d1 % 31 ) + 1;
-	// d2 = (d2 % 31 ) + 1;
         if (m1 > 12 || m1 < 0 || m2 > 12 || m2 < 0) {
 		klee_assert(0);
 	}
@@ -58,7 +45,7 @@ int main() {
 	        swap(&m1, &m2);
 		swap(&d1, &d2);
 	}
-	else if (y1 == y2){
+	else if(y1 == y2) {
 		if (m1 > m2) {
 			swap(&m1, &m2);
 			swap(&d1, &d2);
@@ -70,6 +57,9 @@ int main() {
 		}
 	}
 	int daysOfMonth[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+	int d11 = verify(y1, m1, d1);
+	int d21 = verify(y2, m2, d2);
+	int d = d21 - d11;
 	for (i = y1+1; i < y2; i++) {
 		if (leapYear(i) == 1) {
 			gap += 356;
@@ -102,21 +92,21 @@ int main() {
 		for (i = m1; i < m2; i++) {
 			gap += daysOfMonth[i];
 		}
-		if (m1!=m2) {
-			gap += daysOfMonth[m1-1] - d1;
-			if (leapYear(y1) == 1 && m1<=2) {
-				gap += 1;
+		gap += daysOfMonth[m1-1] - d1;
+		if (leapYear(y1) == 1 && m1<=2) {
+			gap += 1;
+		}
+		gap += d2;
+		if (m1 == m2) {
+			if(gap != d) {
+				klee_assert(0);
+			}			
+		}
+		if (leapYear(y1) == 1 && m1 <= 2) {
+			if (gap != d) {
+				klee_assert(0);
 			}
-			gap += d2;
 		}
-		else {
-			gap += (d2 - d1);
-		}
-	}
-	int d11 = verify(y1, m1, d1);
-	int d21 = verify(y2, m2, d2);
-	if (gap != (d21 - d11)) {
-		klee_assert(0);
 	}
 	return 0;
 }
