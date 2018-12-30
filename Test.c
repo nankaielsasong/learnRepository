@@ -1,6 +1,7 @@
 #include<klee/klee.h>
 #include<stdlib.h>
 #include<stdio.h>
+#include<assert.h>
 struct node{
   struct  node* leftChild;
   struct  node* rightChild;
@@ -108,21 +109,6 @@ void display(struct node* root) {
 }
 
 int main() {
-struct node root;
-klee_make_symbolic(&root, sizeof(root), "testhead");
-int n;
-klee_make_symbolic(&n, sizeof(n), "nodenum");
-struct node* r = &root;
-for (int i = 0;i <n;i++) {
-int x;
-klee_make_symbolic(&x, sizeof(x), "insertnum");
-if (r == NULL) {
-r = Insert(NULL, x);
-}
-r = Insert(r, x);
-}
-display(r);
-/*
 	int testcase;
 	klee_make_symbolic(&testcase, sizeof(testcase), "testcaseindex");
 	if (testcase == 1) {
@@ -131,10 +117,10 @@ display(r);
 	klee_make_symbolic(&a, sizeof(a), "root value1");
 	struct node* rt1 = Insert(NULL, a);
 	DelNode(rt1, a);
-	klee_assume(rt1 == NULL);
-	printf("success1");
+	if (rt1 != NULL) {
+		klee_assert(0);
 	}
-	
+	}
 	if (testcase == 2) {
 	// fault-2
 	int b;
@@ -142,8 +128,11 @@ display(r);
 	struct node* rt2 = Insert(NULL, b);
 	Insert(rt2, b-10);
 	DelNode(rt2, b);
+	if (length(rt2, 0) != 1) {
+		klee_assert(0);
+	}
 	// klee_assume(length(rt2, 0) == 1);
-	printf("success2");
+	
 	}
 	
 	if (testcase == 3) {
@@ -156,8 +145,11 @@ display(r);
 	Insert(rt3, c-30);
 	Insert(rt3, c-15);
 	DelNode(rt3, c-20);
-	 klee_assume(length(rt3, 0) == 4);
-	printf("success3");
+	if (length(rt3, 0) != 4) {
+		klee_assert(0);
+	}
+	//  klee_assume(length(rt3, 0) == 4);
+	
 	}
 	
 	if (testcase == 4) {
@@ -165,7 +157,8 @@ display(r);
 	int d;
         klee_make_symbolic(&d, sizeof(d), "root value3");
         DelNode(NULL, d);
-	 }
+
+	}
 	
 	if(testcase == 5) {
 	// fault-5
@@ -175,7 +168,7 @@ display(r);
         Insert(rt5, e);
 	SearchNode(rt5, 10000);
 	}
-
+/*
 	struct node* rt = Insert(NULL, 10);
 	Insert(rt, 6);
 	Insert(rt, 13);
@@ -184,6 +177,6 @@ display(r);
 	Insert(rt, 3);
 	Insert(rt, 5);
 	printf("%d\n", length(rt, 0));
-	*/
+*/
 	return 0;
 }
