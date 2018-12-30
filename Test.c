@@ -108,6 +108,21 @@ void display(struct node* root) {
 }
 
 int main() {
+struct node root;
+klee_make_symbolic(&root, sizeof(root), "testhead");
+int n;
+klee_make_symbolic(&n, sizeof(n), "nodenum");
+struct node* r = &root;
+for (int i = 0;i <n;i++) {
+int x;
+klee_make_symbolic(&x, sizeof(x), "insertnum");
+if (r == NULL) {
+r = Insert(NULL, x);
+}
+r = Insert(r, x);
+}
+display(r);
+/*
 	int testcase;
 	klee_make_symbolic(&testcase, sizeof(testcase), "testcaseindex");
 	if (testcase == 1) {
@@ -160,7 +175,7 @@ int main() {
         Insert(rt5, e);
 	SearchNode(rt5, 10000);
 	}
-	/*
+
 	struct node* rt = Insert(NULL, 10);
 	Insert(rt, 6);
 	Insert(rt, 13);
