@@ -64,7 +64,7 @@ struct node* Insert(struct node* root, int value) {
 		return rt;
 	}
 	if (value >= root->value) {
-			if (root->rightChild == NULL) {
+		if (root->rightChild == NULL) {
 			struct node* right = (struct node*)malloc(sizeof(struct node));
 			right->value = value;
 			right->rightChild = NULL;
@@ -131,7 +131,6 @@ int main() {
 	if (length(rt2, 0) != 1) {
 		klee_assert(0);
 	}
-	// klee_assume(length(rt2, 0) == 1);
 	
 	}
 	
@@ -148,8 +147,6 @@ int main() {
 	if (length(rt3, 0) != 4) {
 		klee_assert(0);
 	}
-	//  klee_assume(length(rt3, 0) == 4);
-	
 	}
 	
 	if (testcase == 4) {
@@ -168,15 +165,5 @@ int main() {
         Insert(rt5, e);
 	SearchNode(rt5, 10000);
 	}
-/*
-	struct node* rt = Insert(NULL, 10);
-	Insert(rt, 6);
-	Insert(rt, 13);
-	Insert(rt, 4);
-	Insert(rt, 7);
-	Insert(rt, 3);
-	Insert(rt, 5);
-	printf("%d\n", length(rt, 0));
-*/
 	return 0;
 }
